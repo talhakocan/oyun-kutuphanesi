@@ -1,0 +1,72 @@
+CREATE DATABASE IF NOT EXISTS oyun_kutuphanesi CHARACTER SET utf8mb4 COLLATE utf8mb4_turkish_ci;
+USE oyun_kutuphanesi;
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(30) NOT NULL UNIQUE,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  password VARCHAR(255) NOT NULL,
+  bio VARCHAR(200) DEFAULT NULL,
+  avatar_url VARCHAR(500) DEFAULT NULL,
+  weekly_goal DECIMAL(5,1) DEFAULT NULL,
+  is_admin TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS games (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(120) NOT NULL,
+  platform VARCHAR(40) DEFAULT 'PC',
+  genre VARCHAR(40) DEFAULT NULL,
+  cover_url VARCHAR(500) DEFAULT NULL,
+  status ENUM('oynuyorum','bitirdim','biraktim','istek') NOT NULL DEFAULT 'oynuyorum',
+  hours DECIMAL(8,1) NOT NULL DEFAULT 0,
+  rating TINYINT DEFAULT NULL,
+  note TEXT,
+  favorite TINYINT(1) NOT NULL DEFAULT 0,
+  last_played DATE DEFAULT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS play_sessions (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  game_id INT NOT NULL,
+  user_id INT NOT NULL,
+  hours DECIMAL(6,1) NOT NULL,
+  played_on DATE NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS friendships (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  requester_id INT NOT NULL,
+  addressee_id INT NOT NULL,
+  status ENUM('pending','accepted') NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY pair (requester_id, addressee_id),
+  FOREIGN KEY (requester_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (addressee_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS game_comments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  game_id INT NOT NULL,
+  user_id INT NOT NULL,
+  body VARCHAR(500) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS user_badges (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  badge_key VARCHAR(20) NOT NULL,
+  earned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY ub (user_id, badge_key),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

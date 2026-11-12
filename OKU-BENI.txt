@@ -1,0 +1,38 @@
+OYUN KÜTÜPHANEM - KURULUM (XAMPP)
+
+1. XAMPP Control Panel'den Apache ve MySQL'i başlat.
+2. Bu klasörü (oyun_kutuphanesi) şuraya kopyala:  C:\xampp\htdocs\
+3. Tarayıcıda http://localhost/phpmyadmin aç.
+   - Üstten "İçe Aktar" (Import) sekmesine tıkla.
+   - database.sql dosyasını seç ve "Git/Import" de.
+4. Tarayıcıda şunu aç:  http://localhost/oyun_kutuphanesi/
+5. "Kayıt Ol" ile hesap oluştur, giriş yap, oyun ekle.
+
+ZATEN KURDUYSAN: database.sql'i tekrar yükleme;
+phpMyAdmin'de sadece guncelleme.sql dosyasını içe aktar, sonra yeni dosyaları üzerine kopyala.
+
+Veritabanı şifren varsa config.php içindeki $DB_PASS satırını değiştir.
+
+ÖZELLİKLER
+- Kayıt / giriş (şifreler password_hash ile saklanır)
+- Oyun ekleme, düzenleme, silme (kapak resmi, tür, platform, puan, not)
+- Kartta "+ saat" ile hızlı oynama süresi ekleme
+- Arama, duruma göre filtre, sıralama (en çok oynanan vb.)
+- İstatistik sayfası: en çok oynanan oyunlar, türe göre süre, son 7 gün
+- Profil sayfası (profile.php): avatar, biyografi, istatistikler, en çok oynanan oyunlar
+- Arkadaş sistemi (friends.php): kullanıcı ara, istek gönder/kabul et/reddet, arkadaşı çıkar
+- Oyun detay sayfası (game_view.php): oynama kayıtları ve yorumlar (yorumu sahibi ve arkadaşlar yazar)
+- Seviye (XP) sistemi ve 15 rozet (profilde görünür)
+- Etkinlik akışı (feed.php): senin ve arkadaşlarının son hareketleri
+- Liderlik tablosu (leaderboard.php): arkadaşlar arasında haftalık / tüm zamanlar sıralaması
+- "Bugün ne oynasam?" çarkı (picker.php)
+- Oyun sayacı: oyun sayfasında Başlat/Bitir, süre otomatik eklenir
+- Oyun takvimi (ısı haritası), günlük seri ve aylık süre grafiği (stats.php)
+- Favori oyunlar (★), haftalık hedef, CSV dışa aktarma (Excel'de açılır)
+- Steam'den kapak resmi bulma (oyun ekleme sayfasında; internet gerekir)
+- 4 tema: Steam, Mor, Yeşil, Açık (sağ üstten seçilir)
+- Keşfet sayfası, "Oyun Özetim" (Spotify Wrapped tarzı), rozet/seviye bildirimleri
+- "Arkadaşların da oynuyor" bölümü, şifre değiştirme, yönetim paneli (ilk kayıtlı kullanıcı admin olur)
+- Sunum için demo_veri.php (örnek kullanıcı/oyun/süre/yorum yükler, şifre: demo1234)
+- SUNUM_REHBERI.md (özellik listesi, güvenlik notları, demo akışı) ve er_diyagrami.png
+- PDO hazır sorgular (SQL injection koruması), CSRF koruması, XSS koruması

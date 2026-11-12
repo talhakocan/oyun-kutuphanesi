@@ -1,0 +1,43 @@
+-- Daha önce herhangi bir sürümü kurduysan SADECE bu dosyayı içe aktar (XAMPP / MariaDB).
+-- Birden fazla kez çalıştırmak güvenlidir.
+USE oyun_kutuphanesi;
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS bio VARCHAR(200) DEFAULT NULL;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url VARCHAR(500) DEFAULT NULL;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS weekly_goal DECIMAL(5,1) DEFAULT NULL;
+ALTER TABLE games ADD COLUMN IF NOT EXISTS favorite TINYINT(1) NOT NULL DEFAULT 0;
+ALTER TABLE play_sessions ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+CREATE TABLE IF NOT EXISTS friendships (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  requester_id INT NOT NULL,
+  addressee_id INT NOT NULL,
+  status ENUM('pending','accepted') NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY pair (requester_id, addressee_id),
+  FOREIGN KEY (requester_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (addressee_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS game_comments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  game_id INT NOT NULL,
+  user_id INT NOT NULL,
+  body VARCHAR(500) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin TINYINT(1) NOT NULL DEFAULT 0;
+-- İlk kayıtlı kullanıcı yönetici (admin) olur:
+UPDATE users SET is_admin = 1 ORDER BY id ASC LIMIT 1;
+
+CREATE TABLE IF NOT EXISTS user_badges (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  badge_key VARCHAR(20) NOT NULL,
+  earned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY ub (user_id, badge_key),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
