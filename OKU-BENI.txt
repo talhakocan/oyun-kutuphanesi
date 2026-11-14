@@ -2,14 +2,11 @@ OYUN KÜTÜPHANEM - KURULUM (XAMPP)
 
 1. XAMPP Control Panel'den Apache ve MySQL'i başlat.
 2. Bu klasörü (oyun_kutuphanesi) şuraya kopyala:  C:\xampp\htdocs\
-3. Tarayıcıda http://localhost/phpmyadmin aç.
-   - Üstten "İçe Aktar" (Import) sekmesine tıkla.
-   - database.sql dosyasını seç ve "Git/Import" de.
-4. Tarayıcıda şunu aç:  http://localhost/oyun_kutuphanesi/
-5. "Kayıt Ol" ile hesap oluştur, giriş yap, oyun ekle.
+3. Tarayıcıda şunu aç:  http://localhost/oyun_kutuphanesi/
 
-ZATEN KURDUYSAN: database.sql'i tekrar yükleme;
-phpMyAdmin'de sadece guncelleme.sql dosyasını içe aktar, sonra yeni dosyaları üzerine kopyala.
+Veritabanı OTOMATİK kurulur, site demo modunda (giriş istemeden, örnek verilerle) açılır.
+Kendi hesabınla denemek için Çıkış yapıp Kayıt Ol'a tıkla.
+Gerçek yayında config.php içindeki AUTO_LOGIN değerini false yap.
 
 Veritabanı şifren varsa config.php içindeki $DB_PASS satırını değiştir.
 
@@ -35,4 +32,8 @@ Veritabanı şifren varsa config.php içindeki $DB_PASS satırını değiştir.
 - "Arkadaşların da oynuyor" bölümü, şifre değiştirme, yönetim paneli (ilk kayıtlı kullanıcı admin olur)
 - Sunum için demo_veri.php (örnek kullanıcı/oyun/süre/yorum yükler, şifre: demo1234)
 - SUNUM_REHBERI.md (özellik listesi, güvenlik notları, demo akışı) ve er_diyagrami.png
+- Arka plan resmi: kendi (anime vb.) resmini yükle ya da adres gir, karartma/bulanıklık ayarla, canlı önizleme (Ayarlar → Görünüm); 4 hazır arka plan
+- Profil resmi ve oyun kapağı dosyadan yükleme (güvenli yükleme: MIME + boyut + yeniden kodlama)
+- Açılış sayfası, "Kaldığın yerden devam et" bölümü, canlı arama ( / tuşu ), cam (glass) arayüz, animasyonlar
+- Oyun tamamlama yüzdesi, özel koleksiyonlar, halka grafikler, rozet ilerleme çubukları
 - PDO hazır sorgular (SQL injection koruması), CSRF koruması, XSS koruması

@@ -45,9 +45,62 @@ $gl = $pdo->prepare('SELECT weekly_goal FROM users WHERE id = ?');
 $gl->execute([$uid]);
 $goal = (float)$gl->fetchColumn();
 
+$hs = $pdo->prepare('SELECT * FROM games WHERE user_id = ? AND last_played IS NOT NULL AND status <> "istek" ORDER BY last_played DESC, id DESC LIMIT 1');
+$hs->execute([$uid]);
+$hero = $hs->fetch();
+
 $title = 'Kütüphane';
 include 'header.php';
 ?>
+<?php $tg = $hero['id'] ?? ($games[0]['id'] ?? 0); ?>
+<section class="tour" id="tour" style="display:none">
+  <button type="button" class="tourx" id="tourx" title="Gizle">×</button>
+  <b>👋 Hoş geldin! Hızlı gezinti:</b>
+  <div class="tchips">
+    <?php if ($tg): ?><a href="game_view.php?id=<?= (int)$tg ?>">⏱️ Oyun sayacı</a><?php endif; ?>
+    <a href="feed.php">📰 Akış</a>
+    <a href="leaderboard.php">🏆 Sıralama</a>
+    <a href="stats.php">📅 İstatistik</a>
+    <a href="collections.php">🗂️ Koleksiyonlar</a>
+    <a href="timeline.php">🕒 Zaman çizelgesi</a>
+    <a href="wrapped.php">🎬 Oyun Özetim</a>
+    <a href="settings.php">🎨 Arka plan</a>
+  </div>
+</section>
+<script>
+(function () {
+  var t = document.getElementById('tour'), x = document.getElementById('tourx'), off = false;
+  try { off = localStorage.getItem('tour_off') === '1'; } catch (e) {}
+  if (!off) t.style.display = '';
+  x.onclick = function () { t.style.display = 'none'; try { localStorage.setItem('tour_off', '1'); } catch (e) {} };
+})();
+</script>
+
+<?php if ($hero): ?>
+<section class="hero">
+  <div class="hero-bg" style="<?= css_bg($hero['cover_url']) ?>"></div>
+  <div class="hero-in">
+    <a class="hero-cover" href="game_view.php?id=<?= (int)$hero['id'] ?>"><?= cover_html($hero) ?></a>
+    <div class="hero-txt">
+      <div class="eyebrow">KALDIĞIN YERDEN DEVAM ET</div>
+      <h2><?= e($hero['title']) ?></h2>
+      <div class="muted"><?= e(fmt_hours($hero['hours'])) ?> oynadın • son oynanma <?= e(date('d.m.Y', strtotime($hero['last_played']))) ?></div>
+      <?php if ((int)$hero['progress'] > 0): ?>
+        <div class="progress" style="max-width:320px"><div style="width:<?= (int)$hero['progress'] ?>%"></div></div>
+        <div class="muted small">%<?= (int)$hero['progress'] ?> tamamlandı</div>
+      <?php endif; ?>
+      <div class="hero-act">
+        <a class="btn" href="game_view.php?id=<?= (int)$hero['id'] ?>">▶ Oyuna git</a>
+        <form method="post" action="game_hours.php" class="inl">
+          <?= csrf_field() ?><input type="hidden" name="id" value="<?= (int)$hero['id'] ?>"><input type="hidden" name="hours" value="1">
+          <button class="btn ghost">+1 saat</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
+
 <section class="summary">
   <div><b><?= (int)$sum['c'] ?></b><span>Oyun</span></div>
   <div><b><?= e(fmt_hours($sum['h'])) ?></b><span>Toplam Süre</span></div>
@@ -64,7 +117,7 @@ include 'header.php';
 <?php endif; ?>
 
 <form class="filters" method="get">
-  <input name="q" placeholder="Oyun ara..." value="<?= e($q) ?>">
+  <input name="q" id="liveq" placeholder="Oyun ara...  ( / tuşu )" value="<?= e($q) ?>" autocomplete="off">
   <select name="status">
     <option value="">Tüm durumlar</option>
     <?php foreach (STATUSES as $k => $v): ?>
@@ -91,7 +144,7 @@ include 'header.php';
 <?php else: ?>
 <div class="grid">
 <?php foreach ($games as $g): ?>
-  <article class="card">
+  <article class="card" data-title="<?= e(mb_strtolower($g['title'])) ?>">
     <a href="game_view.php?id=<?= (int)$g['id'] ?>"><?= cover_html($g) ?></a>
     <div class="info">
       <div class="titlerow">
@@ -109,6 +162,9 @@ include 'header.php';
       <div class="hours"><?= e(fmt_hours($g['hours'])) ?>
         <?php if ($g['rating']): ?><span class="rate">★ <?= (int)$g['rating'] ?>/10</span><?php endif; ?>
       </div>
+      <?php if ((int)$g['progress'] > 0 && $g['status'] !== 'istek'): ?>
+        <div class="progress sm" title="%<?= (int)$g['progress'] ?> tamamlandı"><div style="width:<?= (int)$g['progress'] ?>%"></div></div>
+      <?php endif; ?>
       <?php if ($g['last_played']): ?><div class="muted small">Son oynanma: <?= e(date('d.m.Y', strtotime($g['last_played']))) ?></div><?php endif; ?>
       <?php if ($g['note']): ?><p class="note"><?= e(mb_strimwidth($g['note'], 0, 90, '…')) ?></p><?php endif; ?>
       <form class="quick" method="post" action="game_hours.php">
@@ -130,4 +186,20 @@ include 'header.php';
 <?php endforeach; ?>
 </div>
 <?php endif; ?>
+<div class="empty" id="noresult" style="display:none"><p>Eşleşen oyun bulunamadı.</p></div>
+<script>
+(function () {
+  var q = document.getElementById('liveq'); if (!q) return;
+  var cards = document.querySelectorAll('.grid .card'), none = document.getElementById('noresult');
+  function f() {
+    var v = q.value.trim().toLowerCase(), shown = 0;
+    cards.forEach(function (c) { var ok = !v || c.dataset.title.indexOf(v) !== -1; c.style.display = ok ? '' : 'none'; if (ok) shown++; });
+    if (none) none.style.display = (cards.length && !shown) ? '' : 'none';
+  }
+  q.addEventListener('input', f); f();
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); q.focus(); }
+  });
+})();
+</script>
 <?php include 'footer.php'; ?>

@@ -1,4 +1,22 @@
 <?php
+function donut($parts, $center, $sub) {
+    $total = 0; foreach ($parts as $p) $total += $p[1];
+    if ($total <= 0) return '<p class="muted">Henüz veri yok.</p>';
+    $r = 70; $c = 2 * M_PI * $r; $off = 0;
+    $svg = '<svg viewBox="0 0 200 200" class="donut"><g transform="rotate(-90 100 100)">';
+    foreach ($parts as $p) {
+        if ($p[1] <= 0) continue;
+        $len = $p[1] / $total * $c;
+        $svg .= '<circle cx="100" cy="100" r="' . $r . '" fill="none" stroke="' . $p[2] . '" stroke-width="26" stroke-dasharray="'
+              . round($len, 2) . ' ' . round($c - $len, 2) . '" stroke-dashoffset="' . round(-$off, 2) . '"><title>' . e($p[0]) . '</title></circle>';
+        $off += $len;
+    }
+    $svg .= '</g><text x="100" y="98" text-anchor="middle" class="dtot">' . e($center) . '</text>'
+          . '<text x="100" y="120" text-anchor="middle" class="dsub">' . e($sub) . '</text></svg>';
+    $leg = '<div class="dleg">';
+    foreach ($parts as $p) if ($p[1] > 0) $leg .= '<div><i style="background:' . $p[2] . '"></i>' . e($p[0]) . '</div>';
+    return '<div class="donutbox">' . $svg . $leg . '</div></div>';
+}
 require 'config.php';
 require_login();
 $uid = $_SESSION['user_id'];
@@ -82,6 +100,19 @@ include 'header.php';
     &nbsp;•&nbsp; Takvim, “+ saat” ve oyun sayacı kayıtlarından oluşur.</div>
 </section>
 
+<?php
+$stColors = ['oynuyorum' => '#2a8bd0', 'bitirdim' => '#5ba32b', 'biraktim' => '#c0773a', 'istek' => '#8a63d2'];
+$stParts = []; $stTotal = 0;
+foreach (STATUSES as $k => $v) { $n = (int)($bySt[$k]['c'] ?? 0); $stTotal += $n; $stParts[] = [$v . ' (' . $n . ')', $n, $stColors[$k]]; }
+$gPal = ['#2a8bd0', '#5ba32b', '#e0a526', '#d0508a', '#8a63d2', '#2ab3a6'];
+$gParts = []; $gTotal = 0;
+foreach ($byGenre as $i => $r) { $gTotal += (float)$r['h']; $gParts[] = [$r['genre'] . ' (' . fmt_hours($r['h']) . ')', (float)$r['h'], $gPal[$i % 6]]; }
+?>
+<div class="two" style="grid-template-columns:1fr 1fr">
+  <section class="panel"><h2>Durum dağılımı</h2><?= donut($stParts, (string)$stTotal, 'oyun') ?></section>
+  <section class="panel"><h2>Türlere göre süre</h2><?= donut($gParts, fmt_hours($gTotal), 'toplam') ?></section>
+</div>
+
 <section class="panel">
   <h2>Aylık oyun süresi</h2>
   <div class="mbars">
@@ -89,6 +120,24 @@ include 'header.php';
       <div class="mbar"><span><?= e(fmt_hours($m['h'])) ?></span>
         <div style="height:<?= max(2, round($m['h'] / $mmax * 100)) ?>%"></div>
         <span class="muted"><?= e($m['label']) ?></span></div>
+    <?php endforeach; ?>
+  </div>
+</section>
+
+<?php
+$wdq = $pdo->prepare('SELECT DAYOFWEEK(played_on) w, SUM(hours) h FROM play_sessions WHERE user_id = ? GROUP BY w');
+$wdq->execute([$uid]);
+$wdm = array_column($wdq->fetchAll(), 'h', 'w');
+$wdNames = [2 => 'Pzt', 3 => 'Sal', 4 => 'Çar', 5 => 'Per', 6 => 'Cum', 7 => 'Cmt', 1 => 'Paz'];
+$wdMax = max(1, max(array_merge([0], array_map('floatval', $wdm))));
+?>
+<section class="panel">
+  <h2>Haftanın hangi günü oynuyorsun?</h2>
+  <div class="mbars" style="height:150px">
+    <?php foreach ($wdNames as $k => $nm): $v = (float)($wdm[$k] ?? 0); ?>
+      <div class="mbar"><span><?= $v > 0 ? e(fmt_hours($v)) : '' ?></span>
+        <div style="height:<?= $v > 0 ? max(3, round($v / $wdMax * 100)) : 2 ?>%"></div>
+        <span class="muted"><?= $nm ?></span></div>
     <?php endforeach; ?>
   </div>
 </section>
@@ -105,7 +154,7 @@ include 'header.php';
     <?php endforeach; ?>
   </section>
   <section class="panel">
-    <h2>Türlere göre süre</h2>
+    <h2>Tür sıralaması</h2>
     <?php if (!$byGenre): ?><p class="muted">Oyunlara tür ekleyince burada görünür.</p><?php endif; ?>
     <?php foreach ($byGenre as $r): ?>
       <div class="bl row2"><span><?= e($r['genre']) ?></span><span><?= e(fmt_hours($r['h'])) ?></span></div>

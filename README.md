@@ -11,19 +11,26 @@ Steam benzeri, oynanan oyunları ve oynama sürelerini takip eden sosyal bir oyu
 - XP / seviye sistemi, 15 rozet, rozet ve seviye bildirimleri, günlük seri
 - İstatistikler: oyun takvimi (ısı haritası), aylık grafik, en çok oynananlar
 - **Oyun Özetim** (Spotify Wrapped tarzı), Keşfet sayfası, “Ne oynasam?” çarkı
+- Demo modu: giriş gerekmeden açılır, otomatik kurulum ve güncelleme, zaman çizelgesi, proje hakkında sayfası
+- Arka plan resmi: kendi (anime vb.) resmini yükle ya da adres gir, karartma/bulanıklık ayarla, canlı önizleme (Ayarlar → Görünüm); 4 hazır arka plan
+- Profil resmi ve oyun kapağı dosyadan yükleme (güvenli yükleme: MIME + boyut + yeniden kodlama)
+- Açılış sayfası, "Kaldığın yerden devam et" bölümü, canlı arama ( / tuşu ), cam (glass) arayüz, animasyonlar
+- Oyun tamamlama yüzdesi, özel koleksiyonlar, halka grafikler, rozet ilerleme çubukları
 - Steam’den kapak resmi arama, 4 tema, yönetim paneli
 
-## Kurulum (XAMPP)
-1. XAMPP’ten **Apache** ve **MySQL**’i başlat.
+## Kurulum (XAMPP) — tek adım
+1. XAMPP'ten **Apache** ve **MySQL**'i başlat.
 2. Bu klasörü `C:\xampp\htdocs\oyun_kutuphanesi` olarak kopyala.
-3. `http://localhost/phpmyadmin` → **İçe Aktar** → `database.sql` dosyasını yükle.
-   (Eski sürümü kurduysan bunun yerine `guncelleme.sql` dosyasını yükle.)
-4. `http://localhost/oyun_kutuphanesi/` adresini aç ve **Kayıt Ol**.
-   İlk kayıt olan kullanıcı otomatik yönetici olur.
-5. (İsteğe bağlı) Örnek veri için `http://localhost/oyun_kutuphanesi/demo_veri.php` sayfasını aç.
-   Demo kullanıcılar: `ali_demo`, `ayse_demo`, `mehmet_demo`, `zeynep_demo` — şifre: `demo1234`.
+3. Tarayıcıda `http://localhost/oyun_kutuphanesi/` adresini aç.
 
-Veritabanı şifren varsa `config.php` içindeki `$DB_PASS` değerini değiştir.
+Hepsi bu. Veritabanı **otomatik kurulur** (phpMyAdmin'e gerek yok) ve site **demo modunda**,
+örnek verilerle, giriş/kayıt istemeden açılır.
+
+- **Demo modu:** `config.php` içindeki `AUTO_LOGIN = true` sayesinde hazır `oyuncu` hesabıyla otomatik girilir.
+  Kendi hesabınla denemek için **Çıkış** yapıp **Kayıt Ol**. Gerçek yayında `AUTO_LOGIN` değerini `false` yap.
+- Eski sürümden güncellerken de bir şey yapmana gerek yok, eksik tablolar/sütunlar otomatik eklenir.
+- Veritabanı şifren varsa `config.php` içindeki `$DB_PASS` değerini değiştir.
+- Diğer demo kullanıcılar: `ali_demo`, `ayse_demo`, `mehmet_demo`, `zeynep_demo` — şifre: `demo1234`.
 
 ## Güvenlik
 PDO hazırlanmış sorgular (SQL injection), `htmlspecialchars` ile çıktı süzme (XSS), CSRF token,

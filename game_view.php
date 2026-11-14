@@ -49,6 +49,10 @@ include 'header.php';
     <div class="hours big"><?= e(fmt_hours($g['hours'])) ?>
       <?php if ($g['rating']): ?><span class="rate">★ <?= (int)$g['rating'] ?>/10</span><?php endif; ?>
     </div>
+    <?php if ((int)$g['progress'] > 0 && $g['status'] !== 'istek'): ?>
+      <div class="progress" style="max-width:340px;margin:10px 0 2px"><div style="width:<?= (int)$g['progress'] ?>%"></div></div>
+      <div class="muted small">%<?= (int)$g['progress'] ?> tamamlandı</div>
+    <?php endif; ?>
     <?php if ($g['last_played']): ?><div class="muted small">Son oynanma: <?= e(date('d.m.Y', strtotime($g['last_played']))) ?></div><?php endif; ?>
     <?php if ($g['note']): ?><p class="note"><?= nl2br(e($g['note'])) ?></p><?php endif; ?>
     <p class="muted small">Kütüphane sahibi: <a href="profile.php?u=<?= urlencode($g['username']) ?>"><?= e($g['username']) ?></a></p>

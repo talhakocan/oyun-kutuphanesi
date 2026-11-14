@@ -28,6 +28,7 @@ include 'header.php';
 ?>
 <div class="authbox">
   <h1>Kayıt Ol</h1>
+  <?php if (AUTO_LOGIN): ?><a class="btn big" style="display:block;text-align:center;margin-bottom:14px" href="library.php?demo=1">👀 Kayıt olmadan dene (demo)</a><?php endif; ?>
   <?php if ($err): ?><div class="flash err"><?= e($err) ?></div><?php endif; ?>
   <form method="post">
     <?= csrf_field() ?>

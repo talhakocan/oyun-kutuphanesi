@@ -39,22 +39,25 @@ function level_info($xp) {
 }
 
 function get_badges($st) {
+    $b = function ($ic, $name, $desc, $cur, $max) {
+        return ['ic' => $ic, 'name' => $name, 'desc' => $desc, 'cur' => min($cur, $max), 'max' => $max, 'ok' => $cur >= $max];
+    };
     return [
-        ['ic' => '🎮', 'name' => 'İlk Adım',        'desc' => 'Kütüphanene ilk oyunu ekle',       'ok' => $st['games'] >= 1],
-        ['ic' => '📚', 'name' => 'Koleksiyoncu',    'desc' => '10 oyun ekle',                     'ok' => $st['games'] >= 10],
-        ['ic' => '🏛️', 'name' => 'Müze',            'desc' => '25 oyun ekle',                     'ok' => $st['games'] >= 25],
-        ['ic' => '⏱️', 'name' => 'Isınma Turu',     'desc' => 'Toplam 10 saat oyna',              'ok' => $st['hours'] >= 10],
-        ['ic' => '🔥', 'name' => '100 Saat Kulübü', 'desc' => 'Toplam 100 saat oyna',             'ok' => $st['hours'] >= 100],
-        ['ic' => '👑', 'name' => '500 Saat Efsanesi','desc' => 'Toplam 500 saat oyna',            'ok' => $st['hours'] >= 500],
-        ['ic' => '🏁', 'name' => 'Bitirici',        'desc' => '3 oyun bitir',                     'ok' => $st['finished'] >= 3],
-        ['ic' => '🏆', 'name' => 'Platin Usta',     'desc' => '10 oyun bitir',                    'ok' => $st['finished'] >= 10],
-        ['ic' => '🏃', 'name' => 'Maraton',         'desc' => 'Tek seferde 5+ saat oyna',         'ok' => $st['maxsession'] >= 5],
-        ['ic' => '📅', 'name' => 'Düzenli',         'desc' => '7 farklı günde oyun oyna',         'ok' => $st['days'] >= 7],
-        ['ic' => '🌈', 'name' => 'Tür Gezgini',     'desc' => '5 farklı türde oyun ekle',         'ok' => $st['genres'] >= 5],
-        ['ic' => '⭐', 'name' => 'Eleştirmen',      'desc' => '5 oyuna puan ver',                 'ok' => $st['rated'] >= 5],
-        ['ic' => '🤝', 'name' => 'Sosyal Kelebek',  'desc' => '3 arkadaş edin',                   'ok' => $st['friends'] >= 3],
-        ['ic' => '💬', 'name' => 'Sohbetçi',        'desc' => '5 yorum yaz',                      'ok' => $st['comments'] >= 5],
-        ['ic' => '🎁', 'name' => 'Hayalperest',     'desc' => 'İstek listesine 3 oyun ekle',      'ok' => $st['wish'] >= 3],
+        $b('🎮', 'İlk Adım',         'Kütüphanene ilk oyunu ekle',     $st['games'], 1),
+        $b('📚', 'Koleksiyoncu',     '10 oyun ekle',                   $st['games'], 10),
+        $b('🏛️', 'Müze',             '25 oyun ekle',                   $st['games'], 25),
+        $b('⏱️', 'Isınma Turu',      'Toplam 10 saat oyna',            $st['hours'], 10),
+        $b('🔥', '100 Saat Kulübü',  'Toplam 100 saat oyna',           $st['hours'], 100),
+        $b('👑', '500 Saat Efsanesi','Toplam 500 saat oyna',           $st['hours'], 500),
+        $b('🏁', 'Bitirici',         '3 oyun bitir',                   $st['finished'], 3),
+        $b('🏆', 'Platin Usta',      '10 oyun bitir',                  $st['finished'], 10),
+        $b('🏃', 'Maraton',          'Tek seferde 5+ saat oyna',       $st['maxsession'], 5),
+        $b('📅', 'Düzenli',          '7 farklı günde oyun oyna',       $st['days'], 7),
+        $b('🌈', 'Tür Gezgini',      '5 farklı türde oyun ekle',       $st['genres'], 5),
+        $b('⭐', 'Eleştirmen',       '5 oyuna puan ver',               $st['rated'], 5),
+        $b('🤝', 'Sosyal Kelebek',   '3 arkadaş edin',                 $st['friends'], 3),
+        $b('💬', 'Sohbetçi',         '5 yorum yaz',                    $st['comments'], 5),
+        $b('🎁', 'Hayalperest',      'İstek listesine 3 oyun ekle',    $st['wish'], 3),
     ];
 }
 

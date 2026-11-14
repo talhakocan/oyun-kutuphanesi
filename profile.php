@@ -81,6 +81,10 @@ include 'header.php';
     <div class="badge <?= $b['ok'] ? '' : 'off' ?>" title="<?= e($b['desc']) ?>">
       <span class="ic"><?= $b['ic'] ?></span><b><?= e($b['name']) ?></b>
       <div class="muted small"><?= e($b['desc']) ?></div>
+      <?php if (!$b['ok'] && $b['max'] > 1): ?>
+        <div class="progress sm"><div style="width:<?= min(100, round($b['cur'] / $b['max'] * 100)) ?>%"></div></div>
+        <div class="muted small"><?= (int)$b['cur'] ?> / <?= (int)$b['max'] ?></div>
+      <?php endif; ?>
     </div>
   <?php endforeach; ?>
 </div>

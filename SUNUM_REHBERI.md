@@ -17,9 +17,10 @@ Kullanıcılar oyun ekler, süre girer, arkadaş edinir, birbirinin oyunlarına 
 | Analiz | İstatistikler, oyun takvimi (ısı haritası), aylık grafik, **Oyun Özetim** (Spotify Wrapped tarzı) |
 | Keşif | Keşfet sayfası (popüler oyunlar), “Ne oynasam?” çarkı, Steam’den kapak arama |
 | Yönetim | Yönetici paneli (kullanıcı listesi, silme, genel istatistik) |
-| Görünüm | 4 tema, mobil uyumlu tasarım |
+| Görünüm | Kendi resmini arka plan yapma (yükle/adres/hazır), karartma-bulanıklık, cam efektli arayüz, 4 tema, mobil uyumlu tasarım, açılış sayfası |
+| Organizasyon | Özel koleksiyonlar, tamamlama yüzdesi, halka grafikler, rozet ilerlemesi |
 
-## 3. Veritabanı (7 tablo)
+## 3. Veritabanı (9 tablo)
 `users` ─< `games` ─< `play_sessions` • `games` ─< `game_comments` • `users` ─< `friendships` (kendisiyle çoklu) • `users` ─< `user_badges`
 Şema görseli: `er_diyagrami.png`. Tüm yabancı anahtarlar `ON DELETE CASCADE` ile tanımlıdır.
 
@@ -29,15 +30,19 @@ Kullanıcılar oyun ekler, süre girer, arkadaş edinir, birbirinin oyunlarına 
 - **CSRF:** Tüm POST formlarında oturuma bağlı rastgele token kontrol edilir.
 - **Şifreler:** `password_hash` / `password_verify` (bcrypt) ile saklanır, düz metin tutulmaz.
 - **Yetki:** Her sayfa `require_login()` ile korunur; kullanıcı yalnızca kendi oyununu düzenler/siler; yönetim paneli veritabanındaki `is_admin` alanını kontrol eder.
+- **Dosya yükleme:** Gerçek MIME türü (finfo) + boyut + getimagesize kontrolü, rastgele dosya adı, GD ile yeniden kodlama; `uploads/` klasöründe PHP çalıştırma engellenir (.htaccess).
+- **CSS enjeksiyonu:** Arka plan adresleri tırnak/parantez içermeyecek şekilde süzülür.
+- **Demo modu:** `AUTO_LOGIN` yalnızca sunum içindir; gerçek yayında kapatılmalıdır.
 - **Oturum:** Girişte `session_regenerate_id` ile oturum sabitleme saldırısına karşı önlem alınır.
 
 ## 5. 5 dakikalık demo akışı
-1. `demo_veri.php` → demo verilerini yükle (önceden hazırlık).
+1. Siteyi aç: otomatik kurulur ve demo hesapla girer (giriş gerekmez).
 2. Giriş yap → **Kütüphane** (kartlar, filtre, favori, haftalık hedef).
 3. Bir oyuna gir → **Oyun Sayacı** ile süre ekle → rozet bildirimi çıkabilir.
 4. **Oyun ekle** sayfasında “Steam’de kapak bul” butonunu göster.
 5. **Akış** ve **Sıralama** sayfaları (arkadaşların hareketleri, kürsü).
 6. **İstatistik** → oyun takvimi ve aylık grafik.
+6b. **Ayarlar → Görünüm:** kendi resmini arka plan yap (canlı önizleme).
 7. **Daha fazla → Oyun Özetim** (animasyonlu özet kartları) — vurucu final.
 8. Tema değiştir (sağ üst), **Yönetim** panelini göster.
 

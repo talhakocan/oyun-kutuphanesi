@@ -159,3 +159,106 @@ nav{flex-wrap:wrap}
 .w5{background:linear-gradient(135deg,#9d174d,#db2777)}
 .w6{background:linear-gradient(135deg,#1d4ed8,#6366f1)}
 .w7{background:linear-gradient(135deg,#15803d,#65a30d)}
+
+/* ================= PROFESYONEL GÖRÜNÜM v4 ================= */
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI",Inter,system-ui,-apple-system,Arial,sans-serif;line-height:1.5}
+h1,h2{letter-spacing:.2px}
+::selection{background:var(--accent);color:#000}
+*{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.btn{border-radius:6px;transition:transform .15s,filter .15s,box-shadow .15s;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.btn.big{padding:14px 28px;font-size:16px}
+.logo{background:linear-gradient(90deg,var(--hl),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;font-weight:800}
+.summary div,.panel,.goal,.profilehead,.authbox,.formbox,.pod,.badge{border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.18)}
+.card{border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,.28);transition:transform .25s,box-shadow .25s,border-color .25s}
+.card:hover{transform:translateY(-6px);box-shadow:0 16px 34px rgba(0,0,0,.45)}
+.card .cover{overflow:hidden}
+.card .cover img{transition:transform .5s}
+.card:hover .cover img{transform:scale(1.08)}
+.grid .card{animation:rise .5s both}
+.grid .card:nth-child(2){animation-delay:.05s}.grid .card:nth-child(3){animation-delay:.1s}.grid .card:nth-child(4){animation-delay:.15s}
+.grid .card:nth-child(5){animation-delay:.2s}.grid .card:nth-child(6){animation-delay:.25s}.grid .card:nth-child(n+7){animation-delay:.3s}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.progress.sm{height:6px;margin:6px 0 2px}
+
+/* arka plan sistemi */
+#bglayer,#bgdim{position:fixed;z-index:-1;pointer-events:none}
+#bglayer{inset:-24px;background-size:cover;background-position:center;background-repeat:no-repeat;filter:blur(var(--blur));z-index:-2}
+#bgdim{inset:0;background:var(--bg);opacity:var(--dim)}
+body:not(.has-bg) #bglayer,body:not(.has-bg) #bgdim{display:none}
+body.has-bg{background:var(--bg2)}
+.has-bg .topbar{background:color-mix(in srgb,var(--deep) 72%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.has-bg .panel,.has-bg .card,.has-bg .summary div,.has-bg .goal,.has-bg .authbox,.has-bg .formbox,.has-bg .profilehead,.has-bg .pod,.has-bg .badge,.has-bg .lcard,.has-bg .dd>div{background:color-mix(in srgb,var(--panel) 68%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.has-bg .foot{color:var(--text)}
+.bgp-sakura #bglayer{background:radial-gradient(circle at 15% 20%,#ff9ec4 0,transparent 42%),radial-gradient(circle at 85% 25%,#b793ff 0,transparent 45%),radial-gradient(circle at 50% 90%,#ffd1e6 0,transparent 40%),linear-gradient(135deg,#2b1b3d,#5a2f6b)}
+.bgp-neon #bglayer{background:radial-gradient(circle at 20% 80%,#ff2bd6 0,transparent 40%),radial-gradient(circle at 80% 20%,#00e5ff 0,transparent 42%),linear-gradient(160deg,#0a0620,#1b0b3a)}
+.bgp-gece #bglayer{background:radial-gradient(circle at 70% 15%,#3b82f6 0,transparent 40%),radial-gradient(circle at 15% 85%,#6366f1 0,transparent 45%),linear-gradient(180deg,#050b1f,#0b1b3a)}
+.bgp-gunbatimi #bglayer{background:radial-gradient(circle at 50% 100%,#ff7e5f 0,transparent 55%),radial-gradient(circle at 85% 10%,#feb47b 0,transparent 40%),linear-gradient(180deg,#1f1147,#6b2d5c)}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.pset{display:flex;align-items:center;gap:6px;margin:0;padding:8px 12px;border:1px solid var(--line);border-radius:6px;cursor:pointer;color:var(--text);font-size:14px}
+.pset input{width:auto;margin:0}.pset.cur{border-color:var(--accent)}
+
+/* kaldığın yerden devam et */
+.hero{position:relative;border-radius:14px;overflow:hidden;margin-bottom:20px;border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.hero-bg{position:absolute;inset:-20px;background-size:cover;background-position:center;filter:blur(18px) brightness(.5);transform:scale(1.1)}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,16,24,.85),rgba(10,16,24,.35));z-index:1}
+.hero-in{position:relative;z-index:2;display:flex;gap:24px;padding:22px;align-items:center;flex-wrap:wrap}
+.hero-cover{width:230px;max-width:100%;border-radius:10px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.5);flex-shrink:0}
+.hero-cover .cover{height:130px}
+.hero-txt{flex:1;min-width:230px;color:#fff}
+.hero-txt .muted{color:#b9c8d6}
+.eyebrow{font-size:12px;letter-spacing:2px;color:var(--accent);font-weight:700;margin-bottom:4px}
+.hero h2{margin:0 0 6px;font-size:30px;color:#fff}
+.hero-act{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+
+/* halka grafik */
+.donutbox{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.donut{width:190px;height:190px}
+.dtot{font-size:28px;font-weight:800;fill:var(--hl)}.dsub{font-size:13px;fill:var(--muted)}
+.dleg{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.dleg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:8px}
+
+/* koleksiyonlar */
+.colcard{color:inherit}
+.mosaic{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.mosaic .cover{height:70px}.mosaic .cover span{font-size:26px}
+.mosaic .empty-cell{background:var(--deep);opacity:.6}
+
+/* açılış sayfası */
+.landing{max-width:1000px;margin:0 auto}
+.lhero{text-align:center;padding:50px 10px 34px}
+.lbadge{display:inline-block;padding:6px 16px;border:1px solid var(--line);border-radius:30px;color:var(--accent);font-size:14px;margin-bottom:18px}
+.lhero h1{font-size:54px;line-height:1.1;margin:0 0 16px}
+.grad{background:linear-gradient(90deg,var(--g1),var(--g2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lhero p{font-size:19px;color:var(--muted);max-width:640px;margin:0 auto 26px}
+.lact{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.lstats{display:flex;gap:40px;justify-content:center;margin-top:34px;flex-wrap:wrap}
+.lstats b{display:block;font-size:30px;color:var(--hl)}.lstats span{color:var(--muted);font-size:14px}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:20px 0 40px}
+.lcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px;transition:transform .2s}
+.lcard:hover{transform:translateY(-4px)}
+.lcard span{font-size:34px}.lcard h3{margin:8px 0 6px;color:var(--hl)}.lcard p{margin:0;color:var(--muted);font-size:14px}
+@media(max-width:720px){.lhero h1{font-size:36px}.hero h2{font-size:24px}}
+
+/* ===== demo modu, gezinti, zaman çizelgesi, hakkında ===== */
+.nbadge{display:inline-block;min-width:18px;padding:0 6px;border-radius:10px;background:#e74c3c;color:#fff;font-size:12px;line-height:18px;text-align:center;margin-left:4px}
+.ribbon{background:linear-gradient(90deg,var(--g1),var(--g2));color:#fff;padding:8px 40px 8px 20px;font-size:14px;position:relative;text-align:center}
+.ribbon a{color:#fff;text-decoration:underline}
+.ribbon button{position:absolute;right:12px;top:4px;background:none;border:0;color:#fff;font-size:20px;cursor:pointer}
+.tour{position:relative;background:var(--panel);border:1px dashed var(--accent);border-radius:10px;padding:14px 40px 14px 18px;margin-bottom:18px}
+.has-bg .tour{background:color-mix(in srgb,var(--panel) 68%,transparent);backdrop-filter:blur(12px)}
+.tourx{position:absolute;right:12px;top:8px;background:none;border:0;color:var(--muted);font-size:20px;cursor:pointer}
+.tchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.tchips a{padding:6px 14px;border:1px solid var(--line);border-radius:20px;font-size:14px;color:var(--text);background:var(--deep)}
+.tchips a:hover{border-color:var(--accent);color:var(--accent)}
+.tline{position:relative;margin-left:10px;padding-left:26px;border-left:2px solid var(--line)}
+.tl-item{position:relative;margin-bottom:28px}
+.tl-dot{position:absolute;left:-35px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--bg)}
+.tl-body h2{margin:0 0 4px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{padding:6px 14px;border-radius:20px;background:var(--deep);border:1px solid var(--line);font-size:14px}
+.steps{margin:0;padding-left:20px;line-height:2}
+.feat{margin:0;padding-left:20px;line-height:1.9}
+code{background:var(--deep);padding:2px 6px;border-radius:4px}
+.foot .fl{display:block;margin-top:4px;font-size:12px}

@@ -10,9 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $s->fetch();
     if ($user && password_verify($_POST['password'] ?? '', $user['password'])) {
         session_regenerate_id(true);
+        unset($_SESSION['no_auto'], $_SESSION['auto']);
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['is_admin'] = (int)($user['is_admin'] ?? 0);
+        $_SESSION['bg'] = ['img' => $user['bg_image'] ?? '', 'dim' => (int)($user['bg_dim'] ?? 55), 'blur' => (int)($user['bg_blur'] ?? 0)];
         header('Location: library.php'); exit;
     }
     $err = 'Kullanıcı adı veya şifre hatalı.';
@@ -22,6 +24,7 @@ include 'header.php';
 ?>
 <div class="authbox">
   <h1>Giriş Yap</h1>
+  <?php if (AUTO_LOGIN): ?><a class="btn big" style="display:block;text-align:center;margin-bottom:14px" href="library.php?demo=1">👀 Giriş yapmadan dene (demo)</a><?php endif; ?>
   <?php if ($err): ?><div class="flash err"><?= e($err) ?></div><?php endif; ?>
   <form method="post">
     <?= csrf_field() ?>
